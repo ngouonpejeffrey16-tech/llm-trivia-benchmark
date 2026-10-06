@@ -17,7 +17,7 @@ models:
   dbt_benchmark:
     staging:
       +schema: staging
-      +materialized: view
+      +materialized: table
     intermediate:
       +schema: intermediate
       +materialized: table
