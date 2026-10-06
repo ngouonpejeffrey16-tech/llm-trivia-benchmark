@@ -1,6 +1,22 @@
+# Python
 .venv/
 __pycache__/
+*.pyc
+
+# Fichiers de test personnels
+test_ollama.py
+
+# dbt
 dbt_benchmark/target/
 dbt_benchmark/logs/
+dbt_benchmark/dbt_packages/
 logs/
+
+# Données
 data/gold/*.duckdb
+data/gold/*.duckdb.wal
+data/silver/ai_responses/fake__*
+
+# Système
+.DS_Store
+Thumbs.db
