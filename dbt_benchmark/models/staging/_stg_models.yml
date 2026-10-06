@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg_questions
+    description: "Questions OpenTDB nettoyées. Grain : 1 ligne = 1 question unique."
+    columns:
+      - name: question_id
+        data_tests:
+          - unique
+          - not_null
+      - name: category
+        data_tests:
+          - not_null
+      - name: question_type
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['multiple', 'boolean']
+      - name: difficulty
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['easy', 'medium', 'hard']
+      - name: question
+        data_tests:
+          - not_null
+      - name: correct_answer
+        data_tests:
+          - not_null
+      - name: correct_letter
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['A', 'B', 'C', 'D']
+      - name: n_options
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [2, 4]
+                quote: false
+      - name: in_sample
+        data_tests:
+          - not_null
