@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: silver
+    description: "Fichiers parquet de la couche silver"
+    tables:
+      - name: questions_clean
+        description: "Questions nettoyées (1 ligne = 1 question)"
+        meta:
+          external_location: "read_parquet('../data/silver/questions_clean.parquet')"
+      - name: ai_responses
+        description: "Réponses des modèles (1 ligne = 1 modèle x 1 prompt x 1 question)"
+        meta:
+          external_location: "read_parquet('../data/silver/ai_responses/*.parquet', union_by_name = true)"
