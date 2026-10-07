@@ -1,0 +1,23 @@
+version: 2
+
+models:
+  - name: int_responses_enriched
+    description: "Réponses IA jointes au contexte des questions. Grain : modèle x prompt x question."
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: ['model', 'prompt_id', 'question_id']
+    columns:
+      - name: answer_mode
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['qcm', 'libre']
+
+  - name: int_question_consensus
+    description: "Taux de réussite de chaque question, tous modèles et prompts confondus."
+    columns:
+      - name: question_id
+        data_tests:
+          - unique
+          - not_null

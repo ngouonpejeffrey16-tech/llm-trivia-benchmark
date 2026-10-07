@@ -5,51 +5,68 @@ models:
     description: "Questions OpenTDB nettoyées. Grain : 1 ligne = 1 question unique."
     columns:
       - name: question_id
-        description: "Identifiant unique de la question (sha1 question + bonne réponse)"
         data_tests:
           - unique
           - not_null
-
       - name: category
         data_tests:
           - not_null
-
       - name: question_type
-        description: "multiple = QCM à 4 choix, boolean = Vrai/Faux"
         data_tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['multiple', 'boolean']
-
       - name: difficulty
         data_tests:
           - not_null
           - accepted_values:
               arguments:
                 values: ['easy', 'medium', 'hard']
-
       - name: question
         data_tests:
           - not_null
-
       - name: correct_answer
         data_tests:
           - not_null
-
       - name: correct_letter
         data_tests:
           - accepted_values:
               arguments:
                 values: ['A', 'B', 'C', 'D']
-
       - name: n_options
         data_tests:
           - accepted_values:
               arguments:
                 values: [2, 4]
                 quote: false
-
       - name: in_sample
+        data_tests:
+          - not_null
+
+  - name: stg_ai_responses
+    description: "Réponses des LLM. Grain : 1 ligne = 1 modèle x 1 prompt x 1 question."
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: ['model', 'prompt_id', 'question_id']
+    columns:
+      - name: model
+        data_tests:
+          - not_null
+      - name: prompt_id
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['p1_open', 'p2_constrained', 'p3_mcq', 'p4_mcq_fewshot']
+      - name: question_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_questions')
+                field: question_id
+      - name: ai_correct
         data_tests:
           - not_null
