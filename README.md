@@ -25,7 +25,7 @@ OpenTDB ──scrape_opentdb.py──► bronze/questions_raw.csv
 ## Prérequis
 
 - **Python 3.12**
-- **Ollama** pour exécuter les modèles en local
+- **Ollama et gemma** pour exécuter les modèles en local
 - un accès internet qui laisse passer `opentdb.com` en HTTPS (scraping uniquement)
 
 ### Environnement Python
@@ -58,6 +58,28 @@ sous Windows). Le script s'arrête avec un message clair si Ollama ne répond pa
 si un modèle n'est pas installé.
 
 ---
+### Ollama (Gemma)
+
+1. Installer Ollama :
+   - Windows : `irm https://ollama.com/install.ps1 | iex` dans PowerShell, ou l'installeur de [ollama.com/download](https://ollama.com/download)
+   - macOS / Linux : voir [ollama.com/download](https://ollama.com/download)
+2. Télécharger le modèle Gemma utilisé par le benchmark :
+```powershell
+   ollama pull gemma3:4b
+```
+3. Vérifier qu'Ollama tourne et que le modèle est présent :
+```powershell
+   ollama list
+```
+   `gemma3:4b` doit apparaître dans la liste.
+4. (Optionnel) Tester le modèle rapidement :
+```powershell
+   ollama run gemma3:4b "Quelle est la capitale de l'Australie ?"
+```
+
+Ollama doit rester lancé pendant tout le benchmark (icône dans la barre des tâches
+sous Windows). Le script s'arrête avec un message clair si Ollama ne répond pas ou
+si le modèle `gemma3:4b` n'est pas installé.
 
 ## 1. Ingestion : scraping d'OpenTDB → bronze
 
