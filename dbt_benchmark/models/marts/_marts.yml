@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: mart_model_leaderboard
+    description: "Classement modèle x prompt : exactitude, gain vs hasard, latence, respect du format."
+    data_tests:
+      - unique_combination:
+          arguments:
+            columns: ['model', 'prompt_id']
+    columns:
+      - name: accuracy_pct
+        data_tests:
+          - not_null
+
+  - name: mart_accuracy_by_category
+    description: "Exactitude par catégorie OpenTDB."
+
+  - name: mart_accuracy_by_difficulty
+    description: "Exactitude par difficulté et par type de question, avec le score du hasard."
+
+  - name: mart_prompt_impact
+    description: "Effet de chaque prompt à modèle constant (écart vs p1_open)."
+
+  - name: mart_question_difficulty
+    description: "Difficulté officielle vs difficulté observée sur l'ensemble des runs."
+    columns:
+      - name: question_id
+        data_tests:
+          - unique
+          - not_null
+
+  - name: mart_response_log
+    description: "Toutes les réponses, pour l'exploration ligne à ligne."
