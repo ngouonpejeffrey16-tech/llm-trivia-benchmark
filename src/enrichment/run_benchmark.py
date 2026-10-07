@@ -88,7 +88,7 @@ def ask(model, messages):
     response = ollama.chat(
         model=model,
         messages=messages,
-        options={"temperature": TEMPERATURE, "seed": SEED},
+        options={"temperature": TEMPERATURE, "seed": SEED, "num_predict": 64},
     )
     elapsed = time.perf_counter() - start
     return response.message.content, response.eval_count, elapsed
