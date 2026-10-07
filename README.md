@@ -1,6 +1,6 @@
 # LLM Trivia Benchmark
 
-Benchmark de modèles de langage locaux (via Ollama) sur les questions de culture
+Benchmark de modèles de langage locaux (via Ollama et gemma) sur les questions de culture
 générale d'[Open Trivia Database](https://opentdb.com), avec une architecture
 médaillon (bronze → silver → gold), dbt et un dashboard Streamlit.
 
