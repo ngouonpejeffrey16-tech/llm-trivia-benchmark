@@ -125,29 +125,35 @@ def run(model, prompt_id, questions, run_id):
         return
 
     n_new = 0
-    for q in tqdm(todo.to_dict("records"), desc=f"{model} / {prompt_id}", unit="q"):
-        messages = build_messages(prompt_id, q)
-        row = {
-            "run_id": run_id,
-            "model": model,
-            "prompt_id": prompt_id,
-            "prompt_text": render(messages),
-            "question_id": q["question_id"],
-            "temperature": TEMPERATURE,
-            "created_at": datetime.now(timezone.utc),
-        }
-        try:
-            raw, eval_count, elapsed = ask(model, messages)
-            row.update(ai_answer_raw=raw, eval_count=eval_count, response_time=elapsed, error=None)
-            row.update(score(raw, q, answer_format))
-        except Exception as exc:  # on garde la trace de l'échec, la ligne sera retentée au prochain run
-            row.update(ai_answer_raw=None, ai_answer=None, ai_correct=False, parse_ok=False,
-                       response_time=None, eval_count=None, error=repr(exc))
+    try:
+        for q in tqdm(todo.to_dict("records"), desc=f"{model} / {prompt_id}", unit="q"):
+            messages = build_messages(prompt_id, q)
+            row = {
+                "run_id": run_id,
+                "model": model,
+                "prompt_id": prompt_id,
+                "prompt_text": render(messages),
+                "question_id": q["question_id"],
+                "temperature": TEMPERATURE,
+                "created_at": datetime.now(timezone.utc),
+            }
+            try:
+                raw, eval_count, elapsed = ask(model, messages)
+                row.update(ai_answer_raw=raw, eval_count=eval_count, response_time=elapsed, error=None)
+                row.update(score(raw, q, answer_format))
+            except Exception as exc:  # on garde la trace de l'échec, la ligne sera retentée au prochain run
+                row.update(ai_answer_raw=None, ai_answer=None, ai_correct=False, parse_ok=False,
+                           response_time=None, eval_count=None, error=repr(exc))
 
-        rows.append(row)
-        n_new += 1
-        if n_new % SAVE_EVERY == 0:
-            save(path, rows)
+            rows.append(row)
+            n_new += 1
+            if n_new % SAVE_EVERY == 0:
+                save(path, rows)
+    except KeyboardInterrupt:
+        # Ctrl+C : on sauvegarde tout ce qui a été fait avant de quitter
+        save(path, rows)
+        raise SystemExit(f"\nInterrompu : {len(rows)} réponses sauvegardées dans {path.name}. "
+                         "Relancez la même commande pour reprendre.")
 
     save(path, rows)
     ok = [r for r in rows if r["error"] is None]
